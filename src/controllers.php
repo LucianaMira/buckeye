@@ -109,7 +109,7 @@ $app->get('/visualizar-pedido/{id}', function(Request $request, $id) use ($app) 
     $itens_pedido = $app['db']->fetchAll($sql, array((int)$id));
 
     return $app['twig']->render('pedido.html', array(
-        'pedido' => $pedido,
+        'pedido_id' => $id,
         'itens_pedido' => $itens_pedido,
     ));
 });
