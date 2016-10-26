@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="Sistema de abertura de chamados">
+
+        <title>Login - Sistema de Abertura de Chamados</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="{{ app.request.basepath }}/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="{{ app.request.basepath }}/css/signin.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="container">
+
+        {% if is_granted('ROLE_CUSTOMER') %}
+            <p class="bg-success">Seja bem-vindo(a) {{ app.security.token.user.username }}!<br><a href="{{ path('logout') }}">Log out</a></p>
+        {% else %}
+            <form class="form-signin" action="{{ path('login_check') }}" method="post">
+                <h2 class="form-signin-heading">Por favor, fa&ccedil;a o login</h2>
+                <label for="inputUser" class="sr-only">E-mail</label>
+                <input type="text" id="inputUser" class="form-control" placeholder="E-mail" name="_username" required autofocus>
+                <label for="inputPassword" class="sr-only">Senha</label>
+                <input type="password" id="inputPassword" class="form-control" placeholder="Senha" name="_password" required>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="_remember_me" id="_remember_me" value="remember-me"> Lembrar minha sess&atilde;o
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+                <br>
+                <a href="#">&raquo; Esqueci minha senha</a><br>
+                <a href="{{ app.request.basepath }}/registrar-cliente">&raquo; Registrar novo usu&aacute;rio</a>
+                {% if error %}
+                <div class="bg-danger error">{{ error }}</div>
+                {% endif %}
+            </form>
+        {% endif %}
+
+        </div> <!-- /container -->
+        <script src="//code.jquery.com/jquery-latest.min.js"></script>
+        <script type="text/javascript">
+            //
+        </script>
+    </body>
+</html>

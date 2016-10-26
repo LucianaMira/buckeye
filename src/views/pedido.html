@@ -1,0 +1,37 @@
+{% include 'header.html' %}
+
+    <div class="container-fluid">
+        
+        <div class="col-sm-10 col-sm-offset-1">
+            <h2>Ordem de servi&ccedil;o #{{ pedido.id }}</h2>
+            
+            <div class="row">
+                {% for item_pedido in itens_pedido %}
+                <article class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12"><a href="{{ app.request.basepath }}/visualizar-pedido/{{ pedido.id }}">{{ pedido.created_at|date('d/m/Y H:i:s') }}</a></div>
+                    </div>
+                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/editar-pedido/{{ pedido.id }}">[Editar]</a></div>
+                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/excluir-pedido/{{ pedido.id }}">[Excluir]</a></div>
+                </article>
+                {% else %}
+                <article class="col-sm-12">Ainda n&atilde;o h&aacute; ordens abertas por voc&ecirc;!</article>
+                {% endfor %}
+            </div>
+            
+        </div>
+
+
+    </div><!-- /.container -->
+
+    {% include 'footer.html' %}
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script src="{{ app.request.basepath }}/js/bootstrap.min.js"></script>
+    <!--<script src="{{ app.request.basepath }}/js/controle-qualidade.js"></script>-->
+</body>
+</html>

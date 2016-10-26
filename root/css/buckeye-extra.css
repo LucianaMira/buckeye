@@ -1,0 +1,73 @@
+#map-canvas, #map-loader {height:680px;margin-top:30px;}
+#map-canvas {margin-bottom:30px;}
+#map-loader {
+	width:100%;
+	background:#fff url(../img/ajax-loader.gif) no-repeat center center;
+	position:absolute;
+	top:0px;
+	left:0px;
+	z-index:99;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+	filter: alpha(opacity=75);
+	-moz-opacity: 0.75;
+	-khtml-opacity: 0.75;
+	opacity: 0.75;
+	text-align:center;
+	font-weight:bold;
+	padding-top:298px;
+	display:none;
+}
+.alerta-dados a {color:#FF0000 !important;font-weight:bold !important;}
+.data-consistida a {color:#FFFFFF !important;background: #5CB85C !important;}
+
+h5 {font-weight:700;}
+#rejected {padding:0;margin:0;}
+#suspeitos, #rejeitados {font-size:10px;}
+#suspeitos {display:none;}
+#suspeitos thead tr th, #rejeitados thead tr th {background-color:#286090;color:#FFFFFF;}
+#suspeitos tbody td:hover, #rejeitados tbody td:hover {cursor:pointer;}
+
+.marker-cq { text-align:center;width:100%;padding-left:4px;}
+.marker-cq div {margin:0 auto;}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  padding-top:70px;
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #222;
+  border-color: #080808;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}

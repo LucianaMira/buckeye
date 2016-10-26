@@ -1,0 +1,41 @@
+{% include 'header.html' %}
+
+        <div class="container-fluid">
+
+        {% for message in app.session.flashbag.get('message') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+        <div class="col-sm-8 col-sm-offset-2">
+            <h2>{{ titulo }}</h2>
+            
+            <div class="row formulario">
+                <form action="#" method="post">
+                    {{ form_widget(form) }}
+                    <div class="row">
+                        <div class="col-sm-12 text-center submit">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Enviar dados</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+
+
+    </div><!-- /.container -->
+
+    {% include 'footer.html' %}
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script src="{{ app.request.basepath }}/js/bootstrap.min.js"></script>
+
+</body>
+</html>

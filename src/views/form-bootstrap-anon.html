@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="windows-1252">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Sistema de abertura de chamados">
+    <meta name="author" content="Ambar Technology">
+
+    <title>Sistema de abertura de chamados</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ app.request.basepath }}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ app.request.basepath }}/css/bootstrap-switch.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ app.request.basepath }}/css/buckeye.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ app.request.basepath }}">Sistema de abertura de chamados</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ app.request.basepath }}/login">Login</a></li>
+                    <li class="active"><a href="#">Novo cliente</a></li>
+                    <li><a href="{{ app.request.basepath }}/recuperar-senha">Recuperar senha</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+
+        {% for message in app.session.flashbag.get('message') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+            {{ message }}<br>
+            <a href="{{ app.request.basepath }}/login">Fa&ccedil;a o login</a>
+        </div>
+        {% endfor %}
+
+        <div class="col-sm-8 col-sm-offset-2">
+            <h2>Preencha corretamente os campos abaixo</h2>
+            
+            <div class="row formulario">
+                <form action="{{ app.request.basepath }}/registrar-cliente" method="post">
+                    {{ form_widget(form) }}
+                    <div class="row">
+                        <div class="col-sm-12 text-center submit">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+
+
+    </div><!-- /.container -->
+
+    {% include 'footer.html' %}
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script src="{{ app.request.basepath }}/js/bootstrap.min.js"></script>
+    <!--<script src="{{ app.request.basepath }}/js/controle-qualidade.js"></script>-->
+</body>
+</html>
