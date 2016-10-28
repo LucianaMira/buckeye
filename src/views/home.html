@@ -8,9 +8,9 @@
             <div class="row">
                 {% for pedido in pedidos %}
                 <article class="col-sm-12">
-                    <div class="col-sm-8"><a href="{{ app.request.basepath }}/visualizar-pedido/{{ pedido.id }}">{{ pedido.created_at|date('d/m/Y H:i:s') }}</a></div>
-                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/editar-pedido/{{ pedido.id }}">[Editar]</a></div>
-                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/excluir-pedido/{{ pedido.id }}">[Excluir]</a></div>
+                    <div class="col-sm-8"><a href="{{ app.request.basepath }}/visualizar-chamado/{{ pedido.id }}">{{ pedido.created_at|date('d/m/Y H:i:s') }}</a></div>
+                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/editar-chamado/{{ pedido.id }}">[Editar]</a></div>
+                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/excluir-chamado/{{ pedido.id }}">[Excluir]</a></div>
                 </article>
                 {% else %}
                 <article class="col-sm-12">Ainda n&atilde;o h&aacute; ordens abertas por voc&ecirc;!</article>

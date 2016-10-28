@@ -1,0 +1,60 @@
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Produto/Tipo de produto:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.produto }} / {{ item.tipo_produto }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Status:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.status }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Defeito:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.defeito }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Quantidade:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.quantidade }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Valor total:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.valor_total_item }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Valor m&atilde;o de obra:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.maodeobra }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Prazo de entrega:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.prazo_entrega|date('d/m/Y H:i:s') }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Garantia:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.garantia }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Fatura:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.fatura }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<strong>Chamado:</strong>
+		</div>
+		<div class="col-sm-7">{{ item.chamado }}</div>
+	</div>

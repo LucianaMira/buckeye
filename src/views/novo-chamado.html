@@ -89,16 +89,10 @@
     <script src="{{ app.request.basepath }}/js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
-        $(document).ready(function() {
-            //empty
-        });
-
-        var salvou = false;
-
         $('#modal-form').on('hidden.bs.modal', function (e) {
             if($('#id_pedido').val() != "") {
                 console.log($('#id_pedido').val());
-                $('#itens-pedido').load( "{{ app.request.basepath }}/itens-pedido/" + $('#id_pedido').val(), function() {
+                $('#itens-pedido').load( "{{ app.request.basepath }}/itens-chamado/" + $('#id_pedido').val(), function() {
                     console.log("itens carregados!");
                 });
             }

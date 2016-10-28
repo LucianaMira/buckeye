@@ -41,7 +41,12 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="{{ app.request.basepath }}/home">Home</a></li>
                     <li><a href="{{ app.request.basepath }}/novo-chamado">Abrir novo chamado</a></li>
-                    <li><a href="{{ app.request.basepath }}/configuracoes">Configura&ccedil;&otilde;es</a></li>
+                    <li class="menu-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configura&ccedil;&otilde;es <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ app.request.basepath }}/alterar-dados">Editar seus dados</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="{{ path('logout') }}" title="Faça o logout do sistema">
                             Logout ({{ app.security.token.user.username }})
