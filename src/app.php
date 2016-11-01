@@ -7,7 +7,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
             'driver'    => 'pdo_mysql',
 	        'host'      => '',
-	        'dbname'    => '',
+	        'dbname'    => 'buckeye',
 	        'user'      => '',
 	        'password'  => '',
         ),
@@ -67,7 +67,8 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.logfile' => sys_get_temp_dir() . '/buckeye.log',
+    //'monolog.logfile' => sys_get_temp_dir() . '/buckeye.log',
+    'monolog.logfile' => __DIR__.'/../logs/buckeye.log',
     'monolog.level' => Monolog\Logger::DEBUG,
     'monolog.name' => 'buckeye'
 ));
