@@ -234,33 +234,35 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $user = new AdvancedUser($data['email'], $data['senha_atual']);
+            $user = new AdvancedUser(trim($data['email']), trim($data['senha_atual']));
             $encoder = $app['security.encoder_factory']->getEncoder($user);
-            $encodedPassword = $encoder->encodePassword($data['senha_atual'], $user->getSalt());
+            $encodedPassword = $encoder->encodePassword(trim($data['senha_atual']), $user->getSalt());
 
-            $sql = "SELECT COUNT(*) FROM clientes WHERE senha = ? AND id = ?";
+            $sql = "SELECT * FROM clientes WHERE senha = ? AND id = ?";
             $numRows = $app['db']->executeQuery($sql, array((string)$encodedPassword, (int)getUserId($app)))->rowCount();
 
-            $app['monolog']->addDebug($encodedPassword . ", " . getUserId($app));
+            //$app['monolog']->addDebug($encodedPassword . ", " . getUserId($app) . ", " . $numRows);
 
-            if(trim($data['confirmar_senha']) != trim($data['nova_senha'])) {
-                $app['session']->getFlashBag()->add('error', 'A nova senha é diferente da confirmação da nova senha!');
+            $mensagem = "";
+
+            if($numRows != 1)
+                $mensagem = 'A senha atual não confere!';    
+            else if(trim($data['confirmar_senha']) != trim($data['nova_senha']))
+                $mensagem = 'A nova senha é diferente da confirmação da nova senha!';
+
+            if($mensagem <> "") {
+                $app['session']->getFlashBag()->add('error', $mensagem);
                 return $app['twig']->render('form-bootstrap.html', array('form' => $form->createView(), 'titulo' => 'Edite seus dados'));
             }
 
-            if($numRows != 1) {
-                $app['session']->getFlashBag()->add('error', 'A senha atual não confere!');
-                return $app['twig']->render('form-bootstrap.html', array('form' => $form->createView(), 'titulo' => 'Edite seus dados'));
-            }
-
-            $newUser = new AdvancedUser($data['email'], $data['nova_senha']);
+            $newUser = new AdvancedUser(trim($data['email']), trim($data['nova_senha']));
             $encoderNewUser = $app['security.encoder_factory']->getEncoder($newUser);
-            $newEncodedPassword = $encoder->encodePassword($data['nova_senha'], $newUser->getSalt());
+            $newEncodedPassword = $encoder->encodePassword(trim($data['nova_senha']), $newUser->getSalt());
 
             $app['db']->update('clientes', array(
-                'telefone' => $data['telefone'], 'senha' => $newEncodedPassword,
-                'endereco' => $data['endereco'], 'nome' => $data['nome'], 'email' => $data['email'],
-                'bairro' => $data['bairro'], 'estado' => $data['estado'], 'cep' => $data['cep'], 'cidade' => $data['cidade']), array('id' => $data['id']));
+                'telefone' => trim($data['telefone']), 'senha' => $newEncodedPassword,
+                'endereco' => trim($data['endereco']), 'nome' => trim($data['nome']), 'email' => trim($data['email']),
+                'bairro' => trim($data['bairro']), 'estado' => trim($data['estado']), 'cep' => trim($data['cep']), 'cidade' => trim($data['cidade'])), array('id' => trim($data['id']), 'senha' => $encodedPassword));
             
             $app['session']->getFlashBag()->add('message', 'Seus dados foram atualizados com sucesso!');
 
