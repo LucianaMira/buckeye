@@ -89,7 +89,7 @@ $app->post('/insere-item', function(Request $request) use ($app) {
 });
 
 $app->get('/itens-chamado/{idPedido}', function(Request $request, $idPedido) use ($app) {
-    $sql = "SELECT ip.id, ip.quantidade, ip.valor, ip.defeito, ip.valor_maodeobra, ip.prazo_entrega, ip.garantia, ip.fatura, ip.recebido_por, ";
+    $sql = "SELECT ip.id AS cod_item, ip.quantidade, ip.valor, ip.defeito, ip.valor_maodeobra, ip.prazo_entrega, ip.garantia, ip.fatura, ip.recebido_por, ";
     $sql .= "sip.nome AS status_nome, p.produto, ip.created_at FROM itens_pedido ip INNER JOIN status_item_pedido sip ON ip.status = sip.id INNER JOIN produtos p ON ";
     $sql .= "ip.id_produto = p.id INNER JOIN pedidos o ON o.id = ip.id_pedido WHERE ip.id_pedido = ? AND o.id_cliente = ? ORDER BY ip.created_at DESC";
 

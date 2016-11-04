@@ -79,6 +79,22 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade bs-modal-lg" id="modal-item" tabindex="-1" role="dialog" aria-labelledby="modalFormLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Detalhe do &iacute;tem</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     {% include 'footer.html' %}
 
 
@@ -96,6 +112,18 @@
                     console.log("itens carregados!");
                 });
             }
+        });
+
+        $('#modal-item').on('shown.bs.modal', function (e) {
+            var $invoker = $(e.relatedTarget);
+
+            console.log($invoker.data('item-id'));
+            console.log("{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'));
+
+            $(this).find('.modal-body').load( "{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'), function() {
+                    console.log("item carregado: {{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'));
+            });
+
         });
 
         $( "#form-item" ).submit(function( event ) {
