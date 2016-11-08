@@ -6,15 +6,27 @@
             <h2>Ol&aacute; {{ nomeUsuario }}! Aqui est&atilde;o suas ordens de servi&ccedil;o</h2>
             
             <div class="row">
-                {% for pedido in pedidos %}
-                <article class="col-sm-12">
-                    <div class="col-sm-8"><a href="{{ app.request.basepath }}/visualizar-chamado/{{ pedido.id }}">{{ pedido.created_at|date('d/m/Y H:i:s') }}</a></div>
-                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/editar-chamado/{{ pedido.id }}">[Editar]</a></div>
-                    <div class="col-sm-2"><a href="{{ app.request.basepath }}/excluir-chamado/{{ pedido.id }}">[Excluir]</a></div>
-                </article>
-                {% else %}
-                <article class="col-sm-12">Ainda n&atilde;o h&aacute; ordens abertas por voc&ecirc;!</article>
-                {% endfor %}
+                <div class="col-sm-12">
+                    <ul class="list-unstyled">
+                    {% for key in pedidos|keys %}
+                        <li>
+                            <a href="{{ app.request.basepath }}/visualizar-chamado/{{ key }}">Chamado #{{ key }} &minus; aberto em {{ pedidos[key]['abertura']|date('d/m/Y H:i:s') }}</a>
+                            <ul>
+                            {% for item in pedidos[key]['itens'] %}
+                                <li>{{ item['quantidade'] }}&nbsp;{{ item['produto'] }} &minus; {{ item.defeito[:100] }} &minus; <strong>{{ item['status_nome'] }}</strong></li>
+                            {% else %}
+                                <li>N&atilde;o h&aacute; &iacute;tens relacionados com este pedido!</li>
+                            {% endfor %}
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li>Ainda n&atilde;o h&aacute; ordens abertas por voc&ecirc;!</li>
+                    {% endfor %}
+                    </ul>
+                    {% if pedidos|length == 0 %}
+                    <a href="{{ app.request.basepath }}/novo-chamado" class="btn btn-primary btn-lg" role="button" style="margin-top:2%">Abrir novo chamado</a>
+                    {% endif %}
+                </div>
             </div>
                         
         </div>

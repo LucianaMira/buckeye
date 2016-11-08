@@ -5,7 +5,7 @@
         <div class="col-sm-10 col-sm-offset-1">
             <h2>Novo pedido</h2>
             
-            <div class="row" id="itens-pedido">
+            <div class="row" id="itens-pedido" style="margin-bottom:2.5%;">
                 <article class="col-sm-12">Ainda n&atilde;o h&aacute; &iacute;tens adicionados neste chamado!</article>
             </div>
 
@@ -23,52 +23,53 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Inserir novo &iacute;tem</h4>
                 </div>
-                <form method="post" action="{{ app.request.basepath }}/insere-item" id="form-item">
+                <form method="post" action="{{ app.request.basepath }}/insere-item" id="form-item" accept-charset="ISO-8859-1">
                 <div class="modal-body">
-                        <fieldset>
-                            <legend>Forne&ccedil;a as seguintes informa&ccedil;&otilde;es</legend>
-                            <input type="hidden" name="id_pedido" id="id_pedido" value="">
-                            <div class="form-group">
-                                <label for="produto">Produto</label>
-                                <input type="text" class="form-control" name="produto" id="produto" size="25" value="" placeholder="Nome do produto">
-                            </div>
-                            <div class="form-group">
-                                <label for="descricao-produto">Descri&ccedil;&atilde;o do produto</label>
-                                <textarea name="descricao-produto" class="form-control" id="descricao-produto" rows="6" cols="12"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="numero-serie-produto">N&uacute;mero de s&eacute;rie do produto</label>
-                                <input type="text" class="form-control" name="numero-serie-produto" id="numero-serie-produto" size="25" value="" placeholder="N&uacute;mero de s&eacute;rie">
-                            </div>
-                            <div class="form-group">
-                                <label for="modelo-produto">Modelo do produto</label>
-                                <input type="text" class="form-control" name="modelo-produto" id="modelo-produto" size="25" value="" placeholder="Modelo do produto">
-                            </div>
-                            <div class="form-group">
-                                <label for="tipo-produto">Tipo do produto</label>
-                                <select class="form-control" name="tipo-produto" id="tipo-produto">
-                                    <option value="" selected="selected"></option>
-                                {% for tipo_produto in tipos_produto %}
-                                    <option value="{{ tipo_produto.id }}">{{ tipo_produto.tipo }}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="quantidade">Quantidade</label>
-                                <input type="number" class="form-control" name="quantidade" id="quantidade" min="1" max="100" size="4" value="">
-                            </div>
-                            <div class="form-group">
-                                <label for="defeito">Defeito</label>
-                                <textarea name="defeito" class="form-control" id="defeito" rows="6" cols="12"></textarea>
-                            </div>
-                            <!--<h5>Garantia</h5>
-                            <label class="radio-inline">
-                                <input type="radio" name="garantia" id="garantia_sim" value="Sim"> Sim
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="garantia" id="garantia_nao" value="Nao"> N&atilde;o
-                            </label>-->
-                        </fieldset>
+                    <div class="alert alert-success alert-dismissible hide" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                        <span class="response-message"></span>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible hide" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                        <span class="response-message"></span>
+                    </div>
+                    <fieldset>
+                        <legend>Forne&ccedil;a as seguintes informa&ccedil;&otilde;es</legend>
+                        <input type="hidden" name="id_pedido" id="id_pedido" value="">
+                        <div class="form-group">
+                            <label for="produto">Produto</label>
+                            <input type="text" class="form-control" name="produto" id="produto" size="25" value="" placeholder="Nome do produto">
+                        </div>
+                        <div class="form-group">
+                            <label for="descricao-produto">Descri&ccedil;&atilde;o do produto</label>
+                            <textarea name="descricao-produto" class="form-control" id="descricao-produto" rows="6" cols="12"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="numero-serie-produto">N&uacute;mero de s&eacute;rie do produto</label>
+                            <input type="text" class="form-control" name="numero-serie-produto" id="numero-serie-produto" size="25" value="" placeholder="N&uacute;mero de s&eacute;rie">
+                        </div>
+                        <div class="form-group">
+                            <label for="modelo-produto">Modelo do produto</label>
+                            <input type="text" class="form-control" name="modelo-produto" id="modelo-produto" size="25" value="" placeholder="Modelo do produto">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo-produto">Tipo do produto</label>
+                            <select class="form-control" name="tipo-produto" id="tipo-produto">
+                                <option value="" selected="selected"></option>
+                            {% for tipo_produto in tipos_produto %}
+                                <option value="{{ tipo_produto.id }}">{{ tipo_produto.tipo }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantidade">Quantidade</label>
+                            <input type="number" class="form-control" name="quantidade" id="quantidade" min="1" max="100" size="4" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="defeito">Defeito</label>
+                            <textarea name="defeito" class="form-control" id="defeito" rows="6" cols="12"></textarea>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
@@ -106,24 +107,43 @@
     <script src="{{ app.request.basepath }}/js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
+        $.ajaxSetup({
+            contentType: 'application/x-www-form-urlencoded; charset=ISO-8859-1',
+            beforeSend: function(xhr) {
+                console.log("entrou no beforeSend");
+                if(xhr.overrideMimeType)
+                    xhr.overrideMimeType('application/x-www-form-urlencoded; charset=ISO-8859-1');
+            }
+        });
+
         $('#modal-form').on('hidden.bs.modal', function (e) {
             if($('#id_pedido').val() != "") {
+                $('#itens-pedido').html("Carregando...");
                 console.log($('#id_pedido').val());
-                $('#itens-pedido').load( "{{ app.request.basepath }}/itens-chamado/" + $('#id_pedido').val(), function() {
-                    console.log("itens carregados!");
-                });
+                $('#itens-pedido').load( "{{ app.request.basepath }}/itens-chamado/" + $('#id_pedido').val() );
+            }
+        });
+
+        $('#modal-form').on('shown.bs.modal', function (e) {
+            if (! $('.alert-success').hasClass('hide') ) {
+                console.log('nao estava ativa no sucesso!');
+                $('.alert-success').addClass('hide');
+            }
+
+            if (! $('.alert-danger').hasClass('hide') ) {
+                console.log('nao estava ativa no perigo!');
+                $('.alert-danger').addClass('hide');
             }
         });
 
         $('#modal-item').on('shown.bs.modal', function (e) {
+            $(this).find('.modal-body').html('Carregando...');
             var $invoker = $(e.relatedTarget);
 
             console.log($invoker.data('item-id'));
             console.log("{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'));
 
-            $(this).find('.modal-body').load( "{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'), function() {
-                    console.log("item carregado: {{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'));
-            });
+            $(this).find('.modal-body').load( "{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id') );
 
         });
 
@@ -140,11 +160,18 @@
             // Send the data using post
             var posting = $.post( url, $( this ).serialize() );
 
-            // Put the results in a div
             posting.done(function( data ) {
                 $('#id_pedido').val(parseInt(data));
                 $('h2').html('Pedido #' + data);
-                alert("Item inserido com sucesso!");
+                $('.alert-success').removeClass('hide');
+                $('.alert-success .response-message').html("Item inserido com sucesso!");
+                $('#modal-form').scrollTop(0);
+            });
+
+            posting.fail(function() {
+                $('.alert-danger').removeClass('hide');
+                $('.alert-danger .response-message').html("Houve algum problema! Tente novamente...");
+                $('#modal-form').scrollTop(0);
             });
 
             $form[0].reset();

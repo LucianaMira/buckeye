@@ -19,14 +19,29 @@ $app->get('/', function() use ($app) {
 
 $app->get('/home', function() use ($app) {
     $token = $app['security']->getToken();
-    //$sql = "SELECT p.id, p.created_at, it.num_pedidos FROM pedidos p INNER JOIN (SELECT COUNT(id_pedido) , id FROM itens_pedido GROUP BY id_pedido ORDER BY id) it ON p.id = it.id WHERE p.id_cliente = (SELECT id_cliente FROM clientes WHERE email = ?) ORDER BY created_at DESC";
-    $sql = "SELECT id, created_at FROM pedidos WHERE id_cliente = ? ORDER BY created_at DESC";
+    
+    $sql = "SELECT o.id, o.created_at AS abertura, ip.quantidade, ip.defeito, ";
+    $sql .= "sip.nome AS status_nome, p.produto FROM itens_pedido ip INNER JOIN status_item_pedido sip ON ip.status = sip.id ";
+    $sql .= "INNER JOIN produtos p ON ip.id_produto = p.id INNER JOIN pedidos o ON o.id = ip.id_pedido WHERE o.id_cliente = ? ";
+    $sql .= "ORDER BY o.created_at DESC, ip.id DESC";
     $pedidos = $app['db']->fetchAll($sql, array((int)getUserId($app)));
+
+    $orders = array();
+    $idPedido = -1;
+
+    foreach ($pedidos as $pedido) {
+        if($idPedido == -1) 
+            $idPedido = $pedido['id'];
+
+        $idPedido = ($idPedido <> $pedido['id'])?$pedido['id']:$idPedido;
+        $orders[$idPedido]['itens'][] = array_intersect_key($pedido, array_flip(array('quantidade', 'defeito', 'status_nome', 'produto')));
+        $orders[$idPedido]['abertura'] = $pedido['abertura'];
+    }
 
     $nomeUsuario = $app['db']->fetchColumn("SELECT nome FROM clientes WHERE email = ?", array((string)$token->getUser()->getUsername()), 0);
 
-    //return print_r($pedidos, true);
-    return $app['twig']->render('home.html', array('pedidos' => $pedidos, 'nomeUsuario' => $nomeUsuario));
+    //return print_r($orders, true);
+    return $app['twig']->render('home.html', array('pedidos' => $orders, 'nomeUsuario' => $nomeUsuario));
 })
 ->bind('home');
 
@@ -67,14 +82,14 @@ $app->post('/insere-item', function(Request $request) use ($app) {
         $idPedido = $app['db']->lastInsertId();
     }
 
-    $produto = trim($request->get('produto'));
-    $descProduto = trim($request->get('descricao-produto'));
+    $produto = iconv('UTF-8', 'ISO-8859-15//TRANSLIT', trim($request->get('produto')));
+    $descProduto = iconv('UTF-8', 'ISO-8859-15//TRANSLIT', trim($request->get('descricao-produto')));
     $numSerieProduto = trim($request->get('numero-serie-produto'));
-    $modeloProduto = trim($request->get('modelo-produto'));
+    $modeloProduto = iconv('UTF-8', 'ISO-8859-15//TRANSLIT', trim($request->get('modelo-produto')));
     $tipoProduto = intval($request->get('tipo-produto'));
 
     $quantidade = $request->get('quantidade');
-    $defeito = $request->get('defeito');
+    $defeito = iconv('UTF-8', 'ISO-8859-15//TRANSLIT', trim($request->get('defeito')));
     //$garantia = $request->get('garantia');
 
     //inserindo novo produto
