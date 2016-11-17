@@ -6,9 +6,9 @@ $app['charset'] = "iso-8859-1";
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
             'driver'    => 'pdo_mysql',
-	        'host'      => 'localhost',
+	        'host'      => '',
 	        'dbname'    => 'buckeye',
-	        'user'      => 'root',
+	        'user'      => '',
 	        'password'  => '',
         ),
 ));
