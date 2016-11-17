@@ -71,6 +71,10 @@ $app->match('/novo-chamado', function(Request $request) use ($app) {
 
 });
 
+$app->post('/recover-password', function(Request $request) use ($app) {
+    $email = trim($request->get('email'));
+});
+
 $app->post('/insere-item', function(Request $request) use ($app) {
 
     $idPedido = intval($request->get('id_pedido'));
@@ -138,13 +142,14 @@ $app->get('/visualizar-chamado/{id}', function(Request $request, $id) use ($app)
     $sql = "SELECT * FROM pedidos WHERE id = ?";
     $pedido = $app['db']->fetchAssoc($sql, array((int)$id));
 
-    $sql = "SELECT ip.id AS id_item, ip.quantidade, ip.valor, ip.valor_maodeobra, (ip.quantidade * ip.valor + ip.valor_maodeobra) AS valor_total, ip.garantia, ip.fatura, ip.recebido_por, ip.chamado, ip.created_at, s.nome AS status, p.* FROM itens_pedido ip INNER JOIN produtos p ON ip.id_produto = p.id INNER JOIN status_item_pedido s ON ip.status = s.id INNER JOIN pedidos o ON o.id = ip.id_pedido WHERE ip.id_pedido = ? AND o.id_cliente = ?";
+    $sql = "SELECT ip.id AS id_item, ip.quantidade, ip.valor, ip.valor_maodeobra, (ip.quantidade * ip.valor + ip.valor_maodeobra) AS valor_total, ip.garantia, ip.fatura, ip.recebido_por, ip.chamado, ip.defeito, ip.created_at, s.nome AS status_nome, p.* FROM itens_pedido ip INNER JOIN produtos p ON ip.id_produto = p.id INNER JOIN status_item_pedido s ON ip.status = s.id INNER JOIN pedidos o ON o.id = ip.id_pedido WHERE ip.id_pedido = ? AND o.id_cliente = ? ORDER BY ip.created_at DESC";
     $itens_pedido = $app['db']->fetchAll($sql, array((int)$id, (int)getUserId($app)));
 
     return $app['twig']->render('pedido.html', array(
         'pedido_id' => $id,
         'itens_pedido' => $itens_pedido,
     ));
+
 });
 
 //$app->get('/interno/login', $login);
