@@ -13,7 +13,7 @@
                 {% for item_pedido in itens_pedido %}
                 <article class="col-sm-12">
                     <div class="row">
-                        <div class="col-sm-12"><a href="#" data-toggle="modal" data-target="#modal-item" data-item-id="{{ item_pedido.id_item }}">{{ item_pedido.created_at|date('d/m/Y H:i') }}</a></div>
+                        <div class="col-sm-12"><a href="#" data-toggle="modal" data-target="#modal-item" data-item-id="{{ item_pedido.id_item }}">{{ item_pedido['quantidade'] }}&nbsp;{{ item_pedido['produto'] }} &minus; {{ item_pedido.defeito[:100] }} &minus; <strong>{{ item_pedido['status_nome'] }}</strong></a></div>
                     </div>
                 </article>
                 {% else %}
@@ -54,11 +54,18 @@
     <script type="text/javascript">
 
         $('#modal-item').on('shown.bs.modal', function (e) {
+
+            $('.modal-body').html('Carregando...');
+
             var $invoker = $(e.relatedTarget);
 
-            $('.modal-body').load( "{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'), function() {
-                    console.log("item carregado: {{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id'));
-            });
+            $('.modal-body').load( "{{ app.request.basepath }}/visualizar-item/" + $invoker.data('item-id') );
+
+        });
+
+        $('#modal-item').on('hidden.bs.modal', function (e) {
+
+            $('.modal-body').html('Carregando...');
 
         });
 
