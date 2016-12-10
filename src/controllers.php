@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\User\User as AdvancedUser;
+//use Symfony\Component\Security\Core\Util\SecureRandom;
 
 $app->before(function () use ($app) {
     $app['translator']->addLoader('xlf', new Symfony\Component\Translation\Loader\XliffFileLoader());
@@ -221,6 +222,42 @@ $app->match('/registrar-cliente', function (Request $request) use ($app) {
     return $app['twig']->render('form-bootstrap-anon.html', array('form' => $form->createView()));
 });
 
+$app->match('/recuperar-senha', function (Request $request) use ($app) {
+
+    $form = $app['form.factory']->createBuilder('form')
+        ->add('email', 'email')
+        ->getForm();
+
+    #$form->handleRequest($request);
+    if ($request->isMethod('POST')) {
+        $form->bind($request);
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $sql = "SELECT * FROM clientes WHERE email = ?";
+            $cliente = $app['db']->fetchAssoc($sql, array((string)trim($data['email'])));
+
+            if($cliente != null) {
+                $random = random_password(8);
+
+                $app['monolog']->addDebug("Nova senha: " . $random);
+
+                $user = new AdvancedUser($data['email'], $random);
+                $encoder = $app['security.encoder_factory']->getEncoder($user);
+                $encodedPassword = $encoder->encodePassword($random, $user->getSalt());
+                $app['db']->update('clientes', array('senha' => $encodedPassword), array('email' => trim($data['email'])));
+                
+                $app['session']->getFlashBag()->add('message', 'Uma nova senha foi enviada para seu e-mail cadastrado!');
+            } else
+                $app['session']->getFlashBag()->add('error', 'Não foi encontrado nenhum usuário cadastrado com o e-mail ' . $data['email'] . '!');
+
+            //return $app->redirect($request->getBasePath() . '/login');
+        }
+    }
+
+    // display the form
+    return $app['twig']->render('form-bootstrap-anon.html', array('form' => $form->createView()));
+});
+
 $app->match('/alterar-dados', function (Request $request) use ($app) {
 
     $sql = "SELECT id, bairro, cep, cidade, email, endereco, estado, nome, telefone FROM clientes WHERE id = ?";
@@ -229,7 +266,6 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $cliente)
         ->add('id', 'hidden')
         ->add('nome')
-        ->add('email', 'email')
         ->add('senha_atual', 'password')
         ->add('nova_senha', 'password')
         ->add('confirmar_senha', 'password')
@@ -249,7 +285,7 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $user = new AdvancedUser(trim($data['email']), trim($data['senha_atual']));
+            $user = new AdvancedUser(trim($cliente['email']), trim($data['senha_atual']));
             $encoder = $app['security.encoder_factory']->getEncoder($user);
             $encodedPassword = $encoder->encodePassword(trim($data['senha_atual']), $user->getSalt());
 
@@ -270,14 +306,23 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
                 return $app['twig']->render('form-bootstrap.html', array('form' => $form->createView(), 'titulo' => 'Edite seus dados'));
             }
 
-            $newUser = new AdvancedUser(trim($data['email']), trim($data['nova_senha']));
+            $newUser = new AdvancedUser(trim($cliente['email']), trim($data['nova_senha']));
             $encoderNewUser = $app['security.encoder_factory']->getEncoder($newUser);
             $newEncodedPassword = $encoder->encodePassword(trim($data['nova_senha']), $newUser->getSalt());
 
             $app['db']->update('clientes', array(
                 'telefone' => trim($data['telefone']), 'senha' => $newEncodedPassword,
-                'endereco' => trim($data['endereco']), 'nome' => trim($data['nome']), 'email' => trim($data['email']),
+                'endereco' => trim($data['endereco']), 'nome' => trim($data['nome']),
                 'bairro' => trim($data['bairro']), 'estado' => trim($data['estado']), 'cep' => trim($data['cep']), 'cidade' => trim($data['cidade'])), array('id' => trim($data['id']), 'senha' => $encodedPassword));
+
+            $message = \Swift_Message::newInstance();
+            $message->setSubject("Seus dados foram alterados");
+            $message->setFrom(array("alexandre@sparkcup.com"));
+            $message->setTo(array($cliente['email']));
+
+            $message->setBody("Seus dados foram alterados às " . date("H:i:s") . " do dia " . date("d/m/Y") . " a partir do equipamento identificado pelo IP " . $app['request']->server->get('REMOTE_ADDR'));
+            $app['monolog']->addDebug("E-mail: " . $cliente['email']);
+            $app['mailer']->send($message);
             
             $app['session']->getFlashBag()->add('message', 'Seus dados foram atualizados com sucesso!');
 
@@ -327,4 +372,20 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
 function getUserId($app) {
     $token = $app['security']->getToken();
     return $app['db']->fetchColumn("SELECT id FROM clientes WHERE email = ?", array((string)$token->getUser()->getUsername()), 0);
+}
+
+function mandaEmail($app, $assunto, $remetente, $destinatario, $mensagem) {
+    $message = \Swift_Message::newInstance();
+    $message->setSubject($assunto);
+    $message->setFrom(array($remetente));
+    $message->setTo($destinatario);
+
+    $message->setBody($mensagem);
+    $app['mailer']->send($message);
+}
+
+function random_password( $length = 8 ) {
+    $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+    $password = substr( str_shuffle( $chars ), 0, $length );
+    return $password;
 }
