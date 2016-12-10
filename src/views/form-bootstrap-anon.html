@@ -12,7 +12,6 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ app.request.basepath }}/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ app.request.basepath }}/css/bootstrap-switch.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{{ app.request.basepath }}/css/buckeye.css" rel="stylesheet">
@@ -35,12 +34,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ app.request.basepath }}">Sistema de abertura de chamados</a>
+                <a class="navbar-brand" href="{{ path('home') }}">Sistema de abertura de chamados</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ app.request.basepath }}/login">Login</a></li>
-                    <li class="active"><a href="#">Novo cliente</a></li>
+                    <li class="active"><a href="{{ app.request.basepath }}/login">Login</a></li>
+                    <li><a href="{{ app.request.basepath }}/registrar-cliente">Novo cliente</a></li>
                     <li><a href="{{ app.request.basepath }}/recuperar-senha">Recuperar senha</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
@@ -52,8 +51,14 @@
         {% for message in app.session.flashbag.get('message') %}
         <div class="alert alert-success alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-            {{ message }}<br>
-            <a href="{{ app.request.basepath }}/login">Fa&ccedil;a o login</a>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+        {% for message in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+            {{ message }}
         </div>
         {% endfor %}
 
@@ -61,11 +66,11 @@
             <h2>Preencha corretamente os campos abaixo</h2>
             
             <div class="row formulario">
-                <form action="{{ app.request.basepath }}/registrar-cliente" method="post">
+                <form action="#" method="post">
                     {{ form_widget(form) }}
                     <div class="row">
                         <div class="col-sm-12 text-center submit">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Enviar dados</button>
                         </div>
                     </div>
                 </form>
