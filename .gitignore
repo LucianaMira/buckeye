@@ -3,10 +3,6 @@ logs/
 cache/*
 !cache/
 composer.lock
-root/css/bootstrap*
-root/fonts/
-root/js/
-!root/js/buckeye.js
 
 # OS generated files #
 ######################
