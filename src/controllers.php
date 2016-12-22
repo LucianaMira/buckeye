@@ -5,7 +5,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\User\User as AdvancedUser;
-//use Symfony\Component\Security\Core\Util\SecureRandom;
 
 $app->before(function () use ($app) {
     $app['translator']->addLoader('xlf', new Symfony\Component\Translation\Loader\XliffFileLoader());
@@ -81,6 +80,18 @@ $app->post('/insere-item', function(Request $request) use ($app) {
         $idCliente = getUserId($app);
         $app['db']->insert('pedidos', array('id_cliente' => $idCliente));
         $idPedido = $app['db']->lastInsertId();
+
+        $sql = "SELECT nome, email FROM clientes WHERE id = ?";
+        $cliente = $app['db']->fetchAssoc($sql, array(intval($idCliente)));
+
+        $message = \Swift_Message::newInstance();
+        $message->setSubject(utf8_encode("Nova ordem de serviço aberta - Sistema de Abertura de Chamados - Ambar Technology"));
+        $message->setFrom(array("contato@brigadeirogourmetdelicia.com.br"));
+        $message->setTo(array($cliente['email'], $app['application_mail']));
+
+        $message->setBody("Nova ordem de serviço aberta no Sistema de Abertura de Chamados!\r\n\r\n#ID ordem: " . $idPedido . "\r\nCliente (Nome/E-mail): " . $cliente['nome'] . " / " . $cliente['email'] . "\r\nHora/Data:" . date("H:i:s") . " do dia " . date("d/m/Y") . "\r\nAberto a partir do equipamento identificado pelo IP: " . $app['request']->server->get('REMOTE_ADDR'));
+        $app['monolog']->addDebug("E-mail: " . $cliente['email']);
+        $app['mailer']->send($message);
     }
 
     $produto = iconv('UTF-8', 'ISO-8859-15//TRANSLIT', trim($request->get('produto')));
@@ -148,41 +159,6 @@ $app->get('/visualizar-chamado/{id}', function(Request $request, $id) use ($app)
     ));
 });
 
-//$app->get('/interno/login', $login);
-
-/*$app->match('/interno/registrar-usuario', function (Request $request) use ($app) {
-
-    $form = $app['form.factory']->createBuilder('form')
-        ->add('nome')
-        ->add('login')
-        ->add('email', 'email')
-        ->add('senha', 'password')
-        ->add('tipo_usuario', 'choice', array(
-        	'choices' => array(1 => 'Operador', 2 => 'Administrador'),
-            'expanded' => true,
-        ))
-        ->getForm();
-
-    #$form->handleRequest($request);
-	if ($request->isMethod('POST')) {
-		$form->bind($request);
-    	if ($form->isValid()) {
-        	$data = $form->getData();
-			$user = new AdvancedUser($data['login'], $data['senha']);
-			$encoder = $app['security.encoder_factory']->getEncoder($user);
-			$encodedPassword = $encoder->encodePassword($data['senha'], $user->getSalt());
-			$app['db']->insert('usuarios', array(
-				'login' => $data['login'], 'senha' => $encodedPassword,
-				'tipo_usuario' => $data['tipo_usuario'], 'nome' => $data['nome'], 'email' => $data['email']));
-			
-			$message = 'Salvo!';
-		}
-    }
-
-    // display the form
-    return $app['twig']->render('form.html', array('form' => $form->createView()));
-});*/
-
 $app->match('/registrar-cliente', function (Request $request) use ($app) {
 
     $form = $app['form.factory']->createBuilder('form')
@@ -248,7 +224,7 @@ $app->match('/recuperar-senha', function (Request $request) use ($app) {
                 
                 $app['session']->getFlashBag()->add('message', 'Uma nova senha foi enviada para seu e-mail cadastrado!');
             } else
-                $app['session']->getFlashBag()->add('error', 'Não foi encontrado nenhum usuário cadastrado com o e-mail ' . $data['email'] . '!');
+                $app['session']->getFlashBag()->add('error', 'Não foi encontrado nenhum cliente cadastrado com o e-mail ' . $data['email'] . '!');
 
             //return $app->redirect($request->getBasePath() . '/login');
         }
@@ -316,7 +292,7 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
                 'bairro' => trim($data['bairro']), 'estado' => trim($data['estado']), 'cep' => trim($data['cep']), 'cidade' => trim($data['cidade'])), array('id' => trim($data['id']), 'senha' => $encodedPassword));
 
             $message = \Swift_Message::newInstance();
-            $message->setSubject("Seus dados foram alterados");
+            $message->setSubject("Seus dados foram alterados - Sistema de Abertura de Chamados - Ambar Technology");
             $message->setFrom(array("alexandre@sparkcup.com"));
             $message->setTo(array($cliente['email']));
 
@@ -372,16 +348,6 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
 function getUserId($app) {
     $token = $app['security']->getToken();
     return $app['db']->fetchColumn("SELECT id FROM clientes WHERE email = ?", array((string)$token->getUser()->getUsername()), 0);
-}
-
-function mandaEmail($app, $assunto, $remetente, $destinatario, $mensagem) {
-    $message = \Swift_Message::newInstance();
-    $message->setSubject($assunto);
-    $message->setFrom(array($remetente));
-    $message->setTo($destinatario);
-
-    $message->setBody($mensagem);
-    $app['mailer']->send($message);
 }
 
 function random_password( $length = 8 ) {

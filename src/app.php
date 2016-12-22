@@ -1,17 +1,30 @@
 <?php
 
-$app['debug'] = true;
+$app['debug'] = false;
 $app['charset'] = "iso-8859-1";
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
             'driver'    => 'pdo_mysql',
-	        'host'      => '',
+	        'host'      => 'localhost',
 	        'dbname'    => 'buckeye',
-	        'user'      => '',
+	        'user'      => 'root',
 	        'password'  => '',
         ),
 ));
+
+$app->register(new Silex\Provider\SwiftmailerServiceProvider());
+
+$app['swiftmailer.options'] = array(
+    'host' => 'mail.ambarnet.com.br',
+    'port' => '25',
+    'username' => '',
+    'password' => '',
+    'encryption' => null,
+    'auth_mode' => null
+);
+
+$app['application_mail'] = "alexandre@sparkcup.com";
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 
@@ -23,6 +36,10 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             ),
             'new_client_path' => array(
                 'pattern' => '^/registrar-cliente$',
+                'anonymous' => true
+            ),
+            'recover_password_path' => array(
+                'pattern' => '^/recuperar-senha$',
                 'anonymous' => true
             ),
             'default' => array(
@@ -67,7 +84,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    //'monolog.logfile' => sys_get_temp_dir() . '/buckeye.log',
     'monolog.logfile' => __DIR__.'/../logs/buckeye.log',
     'monolog.level' => Monolog\Logger::DEBUG,
     'monolog.name' => 'buckeye'
