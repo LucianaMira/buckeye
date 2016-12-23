@@ -18,13 +18,13 @@ $app->register(new Silex\Provider\SwiftmailerServiceProvider());
 $app['swiftmailer.options'] = array(
     'host' => 'mail.ambarnet.com.br',
     'port' => '25',
-    'username' => '',
+    'username' => 'contato@ambarnet.com.br',
     'password' => '',
     'encryption' => null,
     'auth_mode' => null
 );
 
-$app['application_mail'] = "alexandre@sparkcup.com";
+$app['application_mail'] = "contato@ambarnet.com.br";
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 
@@ -85,7 +85,7 @@ $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/buckeye.log',
-    'monolog.level' => Monolog\Logger::DEBUG,
+    'monolog.level' => Monolog\Logger::WARNING,
     'monolog.name' => 'buckeye'
 ));
 

@@ -40,7 +40,6 @@ $app->get('/home', function() use ($app) {
 
     $nomeUsuario = $app['db']->fetchColumn("SELECT nome FROM clientes WHERE email = ?", array((string)$token->getUser()->getUsername()), 0);
 
-    //return print_r($orders, true);
     return $app['twig']->render('home.html', array('pedidos' => $orders, 'nomeUsuario' => $nomeUsuario));
 })
 ->bind('home');
@@ -84,14 +83,16 @@ $app->post('/insere-item', function(Request $request) use ($app) {
         $sql = "SELECT nome, email FROM clientes WHERE id = ?";
         $cliente = $app['db']->fetchAssoc($sql, array(intval($idCliente)));
 
+        /*
         $message = \Swift_Message::newInstance();
         $message->setSubject(utf8_encode("Nova ordem de serviço aberta - Sistema de Abertura de Chamados - Ambar Technology"));
-        $message->setFrom(array("contato@brigadeirogourmetdelicia.com.br"));
+        $message->setFrom(array("contato@ambarnet.com.br"));
         $message->setTo(array($cliente['email'], $app['application_mail']));
 
         $message->setBody("Nova ordem de serviço aberta no Sistema de Abertura de Chamados!\r\n\r\n#ID ordem: " . $idPedido . "\r\nCliente (Nome/E-mail): " . $cliente['nome'] . " / " . $cliente['email'] . "\r\nHora/Data:" . date("H:i:s") . " do dia " . date("d/m/Y") . "\r\nAberto a partir do equipamento identificado pelo IP: " . $app['request']->server->get('REMOTE_ADDR'));
         $app['monolog']->addDebug("E-mail: " . $cliente['email']);
         $app['mailer']->send($message);
+        */
     }
 
     $produto = iconv('UTF-8', 'ISO-8859-15//TRANSLIT', trim($request->get('produto')));
@@ -190,7 +191,6 @@ $app->match('/registrar-cliente', function (Request $request) use ($app) {
             
             $app['session']->getFlashBag()->add('message', 'Cliente registrado com sucesso!');
 
-            //return $app->redirect($request->getBasePath() . '/login');
         }
     }
 
@@ -226,7 +226,6 @@ $app->match('/recuperar-senha', function (Request $request) use ($app) {
             } else
                 $app['session']->getFlashBag()->add('error', 'Não foi encontrado nenhum cliente cadastrado com o e-mail ' . $data['email'] . '!');
 
-            //return $app->redirect($request->getBasePath() . '/login');
         }
     }
 
@@ -268,8 +267,6 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
             $sql = "SELECT * FROM clientes WHERE senha = ? AND id = ?";
             $numRows = $app['db']->executeQuery($sql, array((string)$encodedPassword, (int)getUserId($app)))->rowCount();
 
-            //$app['monolog']->addDebug($encodedPassword . ", " . getUserId($app) . ", " . $numRows);
-
             $mensagem = "";
 
             if($numRows != 1)
@@ -308,40 +305,6 @@ $app->match('/alterar-dados', function (Request $request) use ($app) {
     // display the form
     return $app['twig']->render('form-bootstrap.html', array('form' => $form->createView(), 'titulo' => 'Edite seus dados'));
 });
-
-/*$app->match('/interno/registrar-produto', function (Request $request) use ($app) {
-
-    $tipos_produto = $app['db']->fetchAll('SELECT id, tipo FROM tipo_produto');
-
-    $tipos = array();
-    foreach($tipos_produto as $tipo_prod)
-        $tipos[$tipo_prod['id']] = $tipo_prod['tipo'];
-
-    $form = $app['form.factory']->createBuilder('form')
-        ->add('produto')
-        ->add('descricao', 'textarea')
-        ->add('numero_serie')
-        ->add('modelo')
-        ->add('tipo', ChoiceType::class, array("choices" => $tipos))
-        ->getForm();
-
-    #$form->handleRequest($request);
-    if ($request->isMethod('POST')) {
-        $form->bind($request);
-        if ($form->isValid()) {
-            $data = $form->getData();
-
-            $app['db']->insert('produtos', array(
-                'produto' => $data['produto'], 'descricao' => $data['descricao'],
-                'numero_serie' => $data['numero_serie'], 'modelo' => $data['modelo'], 'tipo_produto' => $data['tipo']));
-            
-            $message = 'Salvo!';
-        }
-    }
-
-    // display the form
-    return $app['twig']->render('form.html', array('form' => $form->createView()));
-});*/
 
 //funções auxiliares
 
